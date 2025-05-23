@@ -19,6 +19,12 @@ const TRANSFER_LIQUIDITY_DISCRIMINATOR: u8 = 9;
 pub const POOL_LEN: u64 = 624;
 pub const POOL_DISCRIMINATOR: [u8; 8] = [116, 210, 187, 119, 196, 196, 52, 137];
 
+
+pub mod spl_token {
+    declare_id!("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
+}
+
+
 #[repr(C)]
 #[derive(Clone, Copy, Debug, Default, BorshDeserialize, BorshSerialize)]
 pub struct InitializePoolParams {
