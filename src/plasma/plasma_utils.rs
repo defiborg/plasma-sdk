@@ -19,11 +19,9 @@ const TRANSFER_LIQUIDITY_DISCRIMINATOR: u8 = 9;
 pub const POOL_LEN: u64 = 624;
 pub const POOL_DISCRIMINATOR: [u8; 8] = [116, 210, 187, 119, 196, 196, 52, 137];
 
-
 pub mod spl_token {
-    declare_id!("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
+    solana_program::declare_id!("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
 }
-
 
 #[repr(C)]
 #[derive(Clone, Copy, Debug, Default, BorshDeserialize, BorshSerialize)]
@@ -90,10 +88,11 @@ pub fn initialize_pool(
             AccountMeta::new_readonly(system_program::ID, false),
             AccountMeta::new_readonly(spl_token::ID, false),
         ],
-        data: [
-            vec![INITIALIZE_POOL_DISCRIMINATOR],
-            params.try_to_vec().unwrap(),
-        ]
+        data: [vec![INITIALIZE_POOL_DISCRIMINATOR], {
+            let mut data = vec![];
+            params.serialize(&mut data).unwrap();
+            data
+        }]
         .concat(),
     }
 }
@@ -157,10 +156,11 @@ pub fn add_liquidity(
             AccountMeta::new(quote_vault_key, false),
             AccountMeta::new_readonly(spl_token::ID, false),
         ],
-        data: [
-            vec![ADD_LIQUIDITY_DISCRIMINATOR],
-            params.try_to_vec().unwrap(),
-        ]
+        data: [vec![ADD_LIQUIDITY_DISCRIMINATOR], {
+            let mut data = vec![];
+            params.serialize(&mut data).unwrap();
+            data
+        }]
         .concat(),
     }
 }
@@ -212,10 +212,11 @@ pub fn remove_liquidity(
             AccountMeta::new(quote_vault_key, false),
             AccountMeta::new_readonly(spl_token::ID, false),
         ],
-        data: [
-            vec![REMOVE_LIQUIDITY_DISCRIMINATOR],
-            shares.try_to_vec().unwrap(),
-        ]
+        data: [vec![REMOVE_LIQUIDITY_DISCRIMINATOR], {
+            let mut data = vec![];
+            shares.serialize(&mut data).unwrap();
+            data
+        }]
         .concat(),
     }
 }
@@ -276,7 +277,12 @@ pub fn swap(
             AccountMeta::new(quote_vault_key, false),
             AccountMeta::new_readonly(spl_token::ID, false),
         ],
-        data: [vec![SWAP_DISCRIMINATOR], params.try_to_vec().unwrap()].concat(),
+        data: [vec![SWAP_DISCRIMINATOR], {
+            let mut data = vec![];
+            params.serialize(&mut data).unwrap();
+            data
+        }]
+        .concat(),
     }
 }
 
